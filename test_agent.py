@@ -14,5 +14,6 @@ def random_agent(episodes=100):
 		if done:
 			break
 
+
 if __name__ == "__main__":
     random_agent()

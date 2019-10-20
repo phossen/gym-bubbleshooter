@@ -1,5 +1,6 @@
 import gym
 import numpy as np
+import sys
 import copy
 import random
 import math
@@ -15,7 +16,6 @@ class Bubble():
 
 
 class BubbleShooterEnv(gym.Env):
-    # TODO: Add seeding function and fps lock
     metadata = {'render.modes': ['human', 'console'],
                 'video.frames_per_second':350}
 
@@ -32,7 +32,10 @@ class BubbleShooterEnv(gym.Env):
 
     colors = [red, green, blue, yellow, orange, purple, cyan]
 
-    def __init__(self):
+    def __init__(self, seed=None):
+        self.seed = seed
+        if seed is None:
+            self.seed = random.randint(0, sys.maxsize)
         self.array_height = 14
         self.array_width = 16
         self.death_line = self.array_height - 2
@@ -61,6 +64,7 @@ class BubbleShooterEnv(gym.Env):
         This function resets the environment and returns the game state.
         """
         self.color_list = copy.deepcopy(self.colors)
+        random.seed(self.seed)
         random.shuffle(self.color_list)
         self.board = self._make_blank_board()
         self._set_bubble_positions()
@@ -289,6 +293,7 @@ class BubbleShooterEnv(gym.Env):
         """
         for row in range(self.initial_lines):
             for column in range(self.array_width):
+                random.seed(self.seed+column)
                 random.shuffle(self.color_list)
                 self.board[row][column].color = self.color_list[0]
 
